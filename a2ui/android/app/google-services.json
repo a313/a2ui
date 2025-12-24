@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "1009255822324",
+    "project_id": "a2ui-850ec",
+    "storage_bucket": "a2ui-850ec.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1009255822324:android:b314bac2a3702c9dc17fa1",
+        "android_client_info": {
+          "package_name": "com.example.a2ui"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC9Hh1S6jjr3NVEmPQX8xT4i0pwECSczn0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

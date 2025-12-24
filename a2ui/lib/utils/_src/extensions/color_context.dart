@@ -1,0 +1,79 @@
+import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
+
+extension ColorExtension on Color {
+  ColorFilter get filterSrcIn => ColorFilter.mode(this, BlendMode.srcIn);
+}
+
+extension WigetExt on Widget {
+  ColoredBox coloredBox({Color color = const Color(0x6CF44336)}) =>
+      ColoredBox(color: color, child: this);
+
+  DebugSizeWidget debugSize() => DebugSizeWidget(child: this);
+}
+
+extension ListExt on List {
+  void addSeparated({required Function(int index) separated}) {
+    for (int i = length - 1; i > 0; i--) {
+      insert(i, separated(i - 1));
+    }
+  }
+}
+
+class DebugSizeWidget extends StatefulWidget {
+  const DebugSizeWidget({super.key, required this.child});
+  final Widget child;
+
+  @override
+  State<DebugSizeWidget> createState() => _DebugSizeWidgetState();
+}
+
+class _DebugSizeWidgetState extends State<DebugSizeWidget> {
+  final GlobalKey _key = GlobalKey();
+  Size size = Size.zero;
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) => getSizeAndPosition());
+  }
+
+  getSizeAndPosition() {
+    final cardBox = _key.currentContext?.findRenderObject();
+    size = (cardBox as RenderBox).size;
+    if (kDebugMode) {
+      print(
+        'w:${size.width}\nh:${size.height}\nar:${size.width / size.height}',
+      );
+    }
+    setState(() {});
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Stack(
+      key: UniqueKey(),
+      alignment: Alignment.bottomRight,
+      children: [
+        Container(
+          key: _key,
+          decoration: BoxDecoration(
+            border: Border.all(
+              color: Colors.red,
+              strokeAlign: BorderSide.strokeAlignOutside,
+            ),
+          ),
+          child: widget.child,
+        ),
+        Padding(
+          padding: const EdgeInsets.all(2.0),
+          child: Text(
+            'w:${size.width}\nh:${size.height}\nar:${size.width / size.height}',
+            style: const TextStyle(fontSize: 10, color: Colors.white),
+            textAlign: TextAlign.right,
+          ),
+        ).coloredBox(color: Colors.black),
+      ],
+    );
+  }
+}
