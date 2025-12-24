@@ -15,7 +15,7 @@ class RegExpFormatter extends TextInputFormatter {
 
     int removedBeforeSelection = 0;
     int cursorPos = selection.baseOffset;
-    int diff = 0;
+
     int i = 0;
     StringBuffer buffer = StringBuffer();
 
