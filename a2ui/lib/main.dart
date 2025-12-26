@@ -1,7 +1,9 @@
+import 'package:a2ui/blocs/bloc/agent_bloc.dart';
+import 'package:a2ui/features/test_widgets.dart';
 import 'package:a2ui/firebase_options.dart';
-import 'package:a2ui/home_page.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -14,6 +16,12 @@ class MainApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(home: HomePage());
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider<AgentBloc>(create: (BuildContext context) => AgentBloc()),
+      ],
+
+      child: const MaterialApp(home: TestWidgets()),
+    );
   }
 }

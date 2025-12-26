@@ -27,6 +27,7 @@ You are an expert Flutter and Dart developer working on the `a2ui` project.
 
 ### Project Structure
 - **lib/**: Contains the main source code.
+  - **blocs/**: Contain bloc/cubit files 
   - **ds/**: Design system contain the UI shared in the app. Each files name start with ds_*. Class name start with Ds. Example ds_button.dart will contain class DsButton 
   - **genui/**: Code related to the GenUI library implementation.
   - **models/**: Data models. Contain all models used in app
