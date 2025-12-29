@@ -1,3 +1,5 @@
+import 'package:a2ui/genui/comparison_schema.dart';
+import 'package:a2ui/genui/riddle_schema.dart';
 import 'package:a2ui/prompts/system.dart';
 import 'package:bloc/bloc.dart';
 import 'package:firebase_ai/firebase_ai.dart';
@@ -23,7 +25,10 @@ class AgentBloc extends Bloc<AgentEvent, AgentState> {
   }
 
   void _initializeConversation() {
-    final catalog = CoreCatalogItems.asCatalog();
+    final catalog = CoreCatalogItems.asCatalog().copyWith([
+      exerciseComparisonWidgetCatalogItem,
+      riddleCard,
+    ]);
     final generator = FirebaseAiContentGenerator(
       modelCreator:
           ({required configuration, systemInstruction, toolConfig, tools}) =>

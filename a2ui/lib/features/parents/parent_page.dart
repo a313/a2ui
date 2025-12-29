@@ -3,6 +3,7 @@ import 'package:a2ui/ds/ds_input.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:genui/genui.dart';
+import 'package:go_router/go_router.dart';
 
 class ParentPage extends StatefulWidget {
   const ParentPage({super.key});
@@ -28,7 +29,14 @@ class _ParentPageState extends State<ParentPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text("Hello")),
+      appBar: AppBar(title: const Text("Parent Page")),
+      floatingActionButton: FloatingActionButton.small(
+        child: Icon(Icons.telegram),
+        onPressed: () {
+          context.go('/test');
+        },
+      ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.endTop,
       body: SafeArea(
         child: Column(
           children: [
@@ -48,6 +56,7 @@ class _ParentPageState extends State<ParentPage> {
                 },
                 builder: (context, state) {
                   return ListView.builder(
+                    padding: EdgeInsets.all(16),
                     itemCount: state.surfaceIds.length,
                     itemBuilder: (context, index) {
                       final id = state.surfaceIds[index];
