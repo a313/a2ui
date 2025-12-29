@@ -233,7 +233,7 @@ class _TravelCarouselItem extends StatelessWidget {
   Widget build(BuildContext context) {
     return SizedBox(
       width: 190,
-      child: InkWell(
+      child: GestureDetector(
         onTap: () {
           final name = data.action['name'] as String;
           final List<Object?> contextDefinition =
@@ -254,7 +254,7 @@ class _TravelCarouselItem extends StatelessWidget {
             ),
           );
         },
-        borderRadius: BorderRadius.circular(10.0),
+
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [

@@ -3,7 +3,6 @@
 // found in the LICENSE file.
 
 import 'package:flutter/material.dart';
-
 import 'package:genui/genui.dart';
 
 typedef UserPromptBuilder =

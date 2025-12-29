@@ -4,6 +4,7 @@
 
 import 'dart:async';
 
+import 'package:firebase_ai/firebase_ai.dart';
 import 'package:flutter/material.dart';
 import 'package:genui/genui.dart';
 import 'package:genui_firebase_ai/genui_firebase_ai.dart';
@@ -67,6 +68,16 @@ class _TravelPlannerPageState extends State<TravelPlannerPage>
     _uiConversation = GenUiConversation(
       a2uiMessageProcessor: a2uiMessageProcessor,
       contentGenerator: FirebaseAiContentGenerator(
+        modelCreator:
+            ({required configuration, systemInstruction, toolConfig, tools}) =>
+                GeminiGenerativeModel(
+                  FirebaseAI.googleAI().generativeModel(
+                    model: 'gemini-2.5-pro',
+                    systemInstruction: systemInstruction,
+                    tools: tools,
+                    toolConfig: toolConfig,
+                  ),
+                ),
         catalog: travelAppCatalog,
         systemInstruction: prompt,
         additionalTools: [
@@ -128,39 +139,41 @@ class _TravelPlannerPageState extends State<TravelPlannerPage>
   @override
   Widget build(BuildContext context) {
     super.build(context);
-    return SafeArea(
-      child: Center(
-        child: Column(
-          children: [
-            Expanded(
-              child: ConstrainedBox(
-                constraints: const BoxConstraints(maxWidth: 1000),
-                child: ValueListenableBuilder<List<ChatMessage>>(
-                  valueListenable: _uiConversation.conversation,
-                  builder: (context, messages, child) {
-                    return Conversation(
-                      messages: messages,
-                      manager: _uiConversation.a2uiMessageProcessor,
-                      scrollController: _scrollController,
+    return Scaffold(
+      body: SafeArea(
+        child: Center(
+          child: Column(
+            children: [
+              Expanded(
+                child: ConstrainedBox(
+                  constraints: const BoxConstraints(maxWidth: 1000),
+                  child: ValueListenableBuilder<List<ChatMessage>>(
+                    valueListenable: _uiConversation.conversation,
+                    builder: (context, messages, child) {
+                      return Conversation(
+                        messages: messages,
+                        manager: _uiConversation.a2uiMessageProcessor,
+                        scrollController: _scrollController,
+                      );
+                    },
+                  ),
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: ValueListenableBuilder<bool>(
+                  valueListenable: _uiConversation.isProcessing,
+                  builder: (context, isThinking, child) {
+                    return _ChatInput(
+                      controller: _textController,
+                      isThinking: isThinking,
+                      onSend: _sendPrompt,
                     );
                   },
                 ),
               ),
-            ),
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: ValueListenableBuilder<bool>(
-                valueListenable: _uiConversation.isProcessing,
-                builder: (context, isThinking, child) {
-                  return _ChatInput(
-                    controller: _textController,
-                    isThinking: isThinking,
-                    onSend: _sendPrompt,
-                  );
-                },
-              ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );
