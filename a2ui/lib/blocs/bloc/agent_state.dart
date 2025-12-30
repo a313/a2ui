@@ -2,17 +2,10 @@ part of 'agent_bloc.dart';
 
 @immutable
 sealed class AgentState {
-  final List<String> surfaceIds;
-  final String? errorMessage;
-  final String? textResponse;
+  final List<ChatMessage> messages;
   final bool isLoading;
 
-  const AgentState({
-    this.surfaceIds = const [],
-    this.errorMessage,
-    this.textResponse,
-    this.isLoading = false,
-  });
+  const AgentState({this.messages = const [], this.isLoading = false});
 }
 
 final class AgentInitial extends AgentState {
@@ -20,21 +13,9 @@ final class AgentInitial extends AgentState {
 }
 
 final class AgentUpdated extends AgentState {
-  const AgentUpdated({
-    required super.surfaceIds,
-    super.errorMessage,
-    super.textResponse,
-    super.isLoading,
-  });
+  const AgentUpdated({required super.messages, super.isLoading});
 }
 
 final class AgentLoading extends AgentState {
-  const AgentLoading({required super.surfaceIds}) : super(isLoading: true);
-}
-
-final class AgentErrorState extends AgentState {
-  const AgentErrorState({
-    required super.surfaceIds,
-    required super.errorMessage,
-  });
+  const AgentLoading({required super.messages}) : super(isLoading: true);
 }

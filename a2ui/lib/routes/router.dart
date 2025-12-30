@@ -1,18 +1,12 @@
 import 'package:a2ui/features/parents/parent_page.dart';
 import 'package:a2ui/features/test_widgets.dart';
-import 'package:a2ui/src/travel_planner_page.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
 /// Router configuration for the app
 final router = GoRouter(
-  initialLocation: '/travel',
+  initialLocation: '/parent',
   routes: [
-    GoRoute(
-      path: '/travel',
-      name: 'travel',
-      builder: (context, state) => TravelPlannerPage(),
-    ),
     GoRoute(
       path: '/test',
       name: 'test',

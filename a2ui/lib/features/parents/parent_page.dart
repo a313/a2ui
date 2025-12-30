@@ -14,6 +14,7 @@ class ParentPage extends StatefulWidget {
 
 class _ParentPageState extends State<ParentPage> {
   final _input = TextEditingController();
+  final _scrollController = ScrollController();
 
   @override
   void didChangeDependencies() {
@@ -41,52 +42,63 @@ class _ParentPageState extends State<ParentPage> {
         child: Column(
           children: [
             Expanded(
-              child: BlocConsumer<AgentBloc, AgentState>(
-                listener: (context, state) {
-                  if (state.errorMessage != null) {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(content: Text(state.errorMessage!)),
-                    );
-                  }
-                  if (state.textResponse != null) {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(content: Text(state.textResponse!)),
-                    );
-                  }
-                },
+              child: BlocBuilder<AgentBloc, AgentState>(
                 builder: (context, state) {
                   return ListView.builder(
+                    controller: _scrollController,
                     padding: EdgeInsets.all(16),
-                    itemCount: state.surfaceIds.length,
+                    itemCount: state.messages.length,
                     itemBuilder: (context, index) {
-                      final id = state.surfaceIds[index];
-                      final bloc = context.read<AgentBloc>();
-                      return GenUiSurface(
-                        host: bloc.conversation.host,
-                        surfaceId: id,
-                      );
+                      final message = state.messages[index];
+                      switch (message) {
+                        case UserMessage():
+                          return ChatMessageWidget(
+                            text: message.text,
+                            icon: Icons.person_3,
+                            alignment: .end,
+                          );
+                        case AiTextMessage():
+                          return ChatMessageWidget(
+                            text: message.text,
+                            icon: Icons.smart_toy_rounded,
+                            alignment: .start,
+                          );
+                        case AiUiMessage():
+                          return GenUiSurface(
+                            key: message.uiKey,
+                            host: context.read<AgentBloc>().conversation.host,
+                            surfaceId: message.surfaceId,
+                          );
+                        default:
+                          return Text(message.runtimeType.toString());
+                      }
                     },
                   );
                 },
               ),
             ),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
-              child: Row(
-                children: [
-                  Expanded(
-                    child: DsInput(
-                      hintText: 'How can I help you',
-                      textInputAction: TextInputAction.send,
-                      controller: _input,
-                      onSubmitted: (value) {
-                        _sendMessage(context, value);
-                      },
-                    ),
+            BlocBuilder<AgentBloc, AgentState>(
+              builder: (context, state) {
+                return Padding(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 12,
+                    vertical: 4,
                   ),
-                  BlocBuilder<AgentBloc, AgentState>(
-                    builder: (context, state) {
-                      return IconButton(
+                  child: Row(
+                    children: [
+                      Expanded(
+                        child: DsInput(
+                          hintText: 'How can I help you',
+                          textInputAction: TextInputAction.send,
+                          controller: _input,
+                          onSubmitted: (value) {
+                            if (!state.isLoading) {
+                              _sendMessage(context, value);
+                            }
+                          },
+                        ),
+                      ),
+                      IconButton(
                         icon: state.isLoading
                             ? const SizedBox(
                                 width: 20,
@@ -101,11 +113,11 @@ class _ParentPageState extends State<ParentPage> {
                             : () {
                                 _sendMessage(context, _input.text);
                               },
-                      );
-                    },
+                      ),
+                    ],
                   ),
-                ],
-              ),
+                );
+              },
             ),
           ],
         ),
@@ -113,8 +125,21 @@ class _ParentPageState extends State<ParentPage> {
     );
   }
 
+  void _scrollToBottom() {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (_scrollController.hasClients) {
+        _scrollController.animateTo(
+          _scrollController.position.maxScrollExtent,
+          duration: const Duration(milliseconds: 300),
+          curve: Curves.easeOut,
+        );
+      }
+    });
+  }
+
   void _sendMessage(BuildContext context, String text) {
     if (text.trim().isNotEmpty) {
+      _scrollToBottom();
       context.read<AgentBloc>().add(AgentSendMessage(text));
       _input.clear();
     }

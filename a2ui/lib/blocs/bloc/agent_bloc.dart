@@ -1,6 +1,8 @@
 import 'package:a2ui/genui/comparison_schema.dart';
-import 'package:a2ui/genui/riddle_schema.dart';
-import 'package:a2ui/prompts/system.dart';
+import 'package:a2ui/genui/exercise_type.dart';
+import 'package:a2ui/genui/math_type.dart';
+import 'package:a2ui/genui/number_input.dart';
+import 'package:a2ui/prompts/system_vi.dart';
 import 'package:bloc/bloc.dart';
 import 'package:firebase_ai/firebase_ai.dart';
 import 'package:genui/genui.dart';
@@ -22,12 +24,15 @@ class AgentBloc extends Bloc<AgentEvent, AgentState> {
     on<AgentSurfaceUpdated>(_onSurfaceUpdated);
     on<AgentTextResponse>(_onTextResponse);
     on<AgentError>(_onError);
+    on<AgentProcessingChanged>(_onProcessingChanged);
   }
 
   void _initializeConversation() {
     final catalog = CoreCatalogItems.asCatalog().copyWith([
+      exerciseTypeSelector,
+      mathTypeSelector,
+      numberInput,
       exerciseComparisonWidgetCatalogItem,
-      riddleCard,
     ]);
     final generator = FirebaseAiContentGenerator(
       modelCreator:
@@ -41,7 +46,7 @@ class AgentBloc extends Bloc<AgentEvent, AgentState> {
                 ),
               ),
       catalog: catalog,
-      systemInstruction: systemInstruction,
+      systemInstruction: systemInstructionVI,
     );
     conversation = GenUiConversation(
       contentGenerator: generator,
@@ -52,6 +57,9 @@ class AgentBloc extends Bloc<AgentEvent, AgentState> {
       onTextResponse: (value) => add(AgentTextResponse(value)),
       onError: (value) => add(AgentError(value.error.toString())),
     );
+    conversation.isProcessing.addListener(() {
+      add(AgentProcessingChanged(conversation.isProcessing.value));
+    });
   }
 
   Future<void> _onSendMessage(
@@ -60,59 +68,58 @@ class AgentBloc extends Bloc<AgentEvent, AgentState> {
   ) async {
     final content = event.message.trim();
     if (content.isEmpty) return;
-
-    emit(AgentLoading(surfaceIds: state.surfaceIds));
-
-    try {
-      print('Send Msg: $content');
-      await conversation.sendRequest(UserMessage.text(content));
-      emit(AgentUpdated(surfaceIds: state.surfaceIds, isLoading: false));
-    } catch (e) {
-      emit(
-        AgentErrorState(
-          surfaceIds: state.surfaceIds,
-          errorMessage: 'Error sending message: $e',
-        ),
-      );
-    }
+    emit(
+      AgentUpdated(
+        messages: [
+          ...conversation.conversation.value,
+          UserMessage.text(content),
+        ],
+        isLoading: true,
+      ),
+    );
+    await conversation.sendRequest(UserMessage.text(content));
+    emit(
+      AgentUpdated(messages: conversation.conversation.value, isLoading: false),
+    );
   }
 
   void _onSurfaceAdded(AgentSurfaceAdded event, Emitter<AgentState> emit) {
-    print("onSurfaceAdded ${event.surfaceId}");
-    final updatedList = List<String>.from(state.surfaceIds)
-      ..add(event.surfaceId);
-    emit(AgentUpdated(surfaceIds: updatedList, isLoading: state.isLoading));
+    emit(
+      AgentUpdated(messages: conversation.conversation.value, isLoading: false),
+    );
   }
 
   void _onSurfaceDeleted(AgentSurfaceDeleted event, Emitter<AgentState> emit) {
-    print("onSurfaceDeleted ${event.surfaceId}");
-    final updatedList = List<String>.from(state.surfaceIds)
-      ..remove(event.surfaceId);
-    emit(AgentUpdated(surfaceIds: updatedList, isLoading: state.isLoading));
+    emit(
+      AgentUpdated(messages: conversation.conversation.value, isLoading: false),
+    );
   }
 
   void _onSurfaceUpdated(AgentSurfaceUpdated event, Emitter<AgentState> emit) {
-    print("onSurfaceUpdated");
     emit(
-      AgentUpdated(surfaceIds: state.surfaceIds, isLoading: state.isLoading),
+      AgentUpdated(messages: conversation.conversation.value, isLoading: false),
     );
   }
 
   void _onTextResponse(AgentTextResponse event, Emitter<AgentState> emit) {
-    print("onTextResponse ${event.text}");
     emit(
-      AgentUpdated(
-        surfaceIds: state.surfaceIds,
-        isLoading: state.isLoading,
-        textResponse: event.text,
-      ),
+      AgentUpdated(messages: conversation.conversation.value, isLoading: false),
     );
   }
 
   void _onError(AgentError event, Emitter<AgentState> emit) {
     print('onError: ${event.error}');
+  }
+
+  void _onProcessingChanged(
+    AgentProcessingChanged event,
+    Emitter<AgentState> emit,
+  ) {
     emit(
-      AgentErrorState(surfaceIds: state.surfaceIds, errorMessage: event.error),
+      AgentUpdated(
+        messages: conversation.conversation.value,
+        isLoading: event.isProcessing,
+      ),
     );
   }
 }

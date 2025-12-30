@@ -31,3 +31,8 @@ final class AgentError extends AgentEvent {
   final String error;
   AgentError(this.error);
 }
+
+final class AgentProcessingChanged extends AgentEvent {
+  final bool isProcessing;
+  AgentProcessingChanged(this.isProcessing);
+}

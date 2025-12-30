@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:genui/genui.dart';
 import 'package:json_schema_builder/json_schema_builder.dart';
 
-/// Schema định nghĩa cho ExerciseComparisonWidget
 final exerciseComparisonWidgetSchema = S.object(
   title: 'ExerciseComparisonWidget',
   description:
