@@ -1,50 +1,61 @@
-import 'package:a2ui/widgets/maths/comparison_widget.dart';
+import 'package:a2ui/widgets/maths/operation_widget.dart';
 import 'package:a2ui/widgets/shared/exercise_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:genui/genui.dart';
 import 'package:json_schema_builder/json_schema_builder.dart';
 
-/// Helper to parse userAnswer string to ComparisonOperator
-ComparisonOperator? _parseComparisonOperator(String? value) {
+/// Helper to parse userAnswer string to MathOperation
+MathOperation? _parseMathOperation(String? value) {
   if (value == null) return null;
   switch (value.toLowerCase()) {
-    case '>':
-    case 'greaterthan':
-      return ComparisonOperator.greaterThan;
-    case '<':
-    case 'lessthan':
-      return ComparisonOperator.lessThan;
-    case '=':
-    case 'equal':
-      return ComparisonOperator.equal;
+    case '+':
+    case 'add':
+      return MathOperation.add;
+    case '-':
+    case 'subtract':
+      return MathOperation.subtract;
+    case '×':
+    case 'x':
+    case '*':
+    case 'multiply':
+      return MathOperation.multiply;
+    case '÷':
+    case '/':
+    case 'divide':
+      return MathOperation.divide;
     default:
       return null;
   }
 }
 
 final _schema = S.object(
-  title: 'ExerciseComparisonWidget',
+  title: 'ExerciseOperationWidget',
   description:
-      'A widget for displaying a set of comparison questions with a title. Each question compares two numbers with operators (<, >, =)',
+      'A widget for displaying a set of math operation questions with a title. Each question has two numbers and an operation (+, -, ×, ÷) where the user needs to find the result.',
   properties: {
     'title': S.string(description: 'The title of the exercise', minLength: 1),
     'questions': S.list(
-      description: 'Array of comparison questions',
+      description: 'Array of operation questions',
       items: S.object(
         properties: {
           'firstNumber': S.integer(
-            description: 'The first number to compare',
+            description: 'The first number in the operation',
             minimum: 0,
             maximum: 100,
           ),
           'secondNumber': S.integer(
-            description: 'The second number to compare',
+            description: 'The second number in the operation',
             minimum: 0,
             maximum: 100,
           ),
-          'userAnswer': S.string(description: 'The user answer'),
+          'operation': S.string(
+            description:
+                'The math operation: + (add), - (subtract), × (multiply), ÷ (divide)',
+            enumValues: ['+', '-', '×', '÷'],
+          ),
+          'userAnswer': S.integer(description: 'The user answer (result)'),
         },
-        required: ['firstNumber', 'secondNumber'],
+        required: ['firstNumber', 'secondNumber', 'operation'],
       ),
       minItems: 1,
     ),
@@ -52,9 +63,9 @@ final _schema = S.object(
   required: ['title', 'questions'],
 );
 
-/// CatalogItem cho ExerciseComparisonWidget
-final exerciseComparisonWidgetCatalogItem = CatalogItem(
-  name: 'ExerciseComparisonWidget',
+/// CatalogItem cho ExerciseOperationWidget
+final exerciseOperationWidgetCatalogItem = CatalogItem(
+  name: 'ExerciseOperationWidget',
   dataSchema: _schema,
   exampleData: [
     () => '''
@@ -62,12 +73,12 @@ final exerciseComparisonWidgetCatalogItem = CatalogItem(
         {
           "id": "root",
           "component": {
-            "ExerciseComparisonWidget": {
-              "title": "So sánh các số",
+            "ExerciseOperationWidget": {
+              "title": "Phép tính cơ bản",
               "questions": [
-                {"firstNumber": 5, "secondNumber": 3},
-                {"firstNumber": 2, "secondNumber": 7},
-                {"firstNumber": 4, "secondNumber": 4}
+                {"firstNumber": 5, "secondNumber": 3, "operation": "+"},
+                {"firstNumber": 10, "secondNumber": 4, "operation": "-"},
+                {"firstNumber": 6, "secondNumber": 2, "operation": "×"}
               ]
             }
           }
@@ -79,12 +90,12 @@ final exerciseComparisonWidgetCatalogItem = CatalogItem(
         {
           "id": "root",
           "component": {
-            "ExerciseComparisonWidget": {
-              "title": "Bài tập so sánh số",
+            "ExerciseOperationWidget": {
+              "title": "Bài tập phép tính",
               "questions": [
-                {"firstNumber": 10, "secondNumber": 8, "userAnswer": ">"},
-                {"firstNumber": 3, "secondNumber": 6, "userAnswer": "<"},
-                {"firstNumber": 5, "secondNumber": 5, "userAnswer": "="}
+                {"firstNumber": 8, "secondNumber": 2, "operation": "+", "userAnswer": 10},
+                {"firstNumber": 15, "secondNumber": 7, "operation": "-", "userAnswer": 8},
+                {"firstNumber": 4, "secondNumber": 5, "operation": "×", "userAnswer": 20}
               ]
             }
           }
@@ -106,7 +117,7 @@ final exerciseComparisonWidgetCatalogItem = CatalogItem(
 
     // Parse questions array
     final questionsValue = data?['questions'];
-    List<ComparisonWidget> questions = [];
+    List<OperationWidget> questions = [];
 
     if (questionsValue is List) {
       for (final entry in questionsValue.asMap().entries) {
@@ -133,26 +144,39 @@ final exerciseComparisonWidgetCatalogItem = CatalogItem(
             secondNumber = literalStr != null ? int.tryParse(literalStr) : null;
           }
 
+          // Parse operation
+          final operationValue = questionData['operation'];
+          String? operationStr;
+          if (operationValue is String) {
+            operationStr = operationValue;
+          } else if (operationValue is Map<String, Object?>) {
+            operationStr = operationValue['literalString'] as String?;
+          }
+          final operation = _parseMathOperation(operationStr);
+
           // Parse userAnswer
           final userAnswerValue = questionData['userAnswer'];
-          String? userAnswerStr;
-          if (userAnswerValue is String) {
-            userAnswerStr = userAnswerValue;
+          int? userAnswer;
+          if (userAnswerValue is int) {
+            userAnswer = userAnswerValue;
           } else if (userAnswerValue is Map<String, Object?>) {
-            userAnswerStr = userAnswerValue['literalString'] as String?;
+            final literalStr = userAnswerValue['literalString'] as String?;
+            userAnswer = literalStr != null ? int.tryParse(literalStr) : null;
           }
-          final userAnswer = _parseComparisonOperator(userAnswerStr);
 
-          if (firstNumber != null && secondNumber != null) {
+          if (firstNumber != null &&
+              secondNumber != null &&
+              operation != null) {
             questions.add(
-              ComparisonWidget(
+              OperationWidget(
                 firstNumber: firstNumber,
                 secondNumber: secondNumber,
-                initAnswer: userAnswer,
-                onChanged: (operator) {
+                operation: operation,
+                userAnswer: userAnswer,
+                onChanged: (value) {
                   // Update userAnswer in dataContext
                   final path = DataPath('/questions/$questionIndex/userAnswer');
-                  context.dataContext.update(path, operator.symbol);
+                  context.dataContext.update(path, value);
                 },
               ),
             );
@@ -165,6 +189,6 @@ final exerciseComparisonWidgetCatalogItem = CatalogItem(
       return const SizedBox.shrink();
     }
 
-    return ExerciseWidget<ComparisonWidget>(title: title, questions: questions);
+    return ExerciseWidget<OperationWidget>(title: title, questions: questions);
   },
 );

@@ -1,7 +1,8 @@
 import 'package:a2ui/genui/comparison_schema.dart';
+import 'package:a2ui/genui/counting_operation_schema.dart';
 import 'package:a2ui/genui/exercise_type.dart';
 import 'package:a2ui/genui/math_type.dart';
-import 'package:a2ui/genui/number_input.dart';
+import 'package:a2ui/genui/operation_schema.dart';
 import 'package:a2ui/prompts/system_vi.dart';
 import 'package:bloc/bloc.dart';
 import 'package:firebase_ai/firebase_ai.dart';
@@ -31,8 +32,9 @@ class AgentBloc extends Bloc<AgentEvent, AgentState> {
     final catalog = CoreCatalogItems.asCatalog().copyWith([
       exerciseTypeSelector,
       mathTypeSelector,
-      numberInput,
       exerciseComparisonWidgetCatalogItem,
+      exerciseCountingOperationWidgetCatalogItem,
+      exerciseOperationWidgetCatalogItem,
     ]);
     final generator = FirebaseAiContentGenerator(
       modelCreator:

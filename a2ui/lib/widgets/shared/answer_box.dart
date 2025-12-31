@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 class AnswerBox extends StatelessWidget {
   final String? userAnswer;
   final String correctAnswer;
-  final bool showAnswer;
+
   final void Function(Offset position)? onTap;
 
   const AnswerBox({
@@ -11,7 +11,6 @@ class AnswerBox extends StatelessWidget {
     this.onTap,
     this.userAnswer,
     required this.correctAnswer,
-    required this.showAnswer,
   });
 
   void _handleTap(BuildContext context) {

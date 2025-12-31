@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 
-class ExerciseWidget extends StatelessWidget {
+class ExerciseWidget<T extends Widget> extends StatelessWidget {
   final String title;
-  final List<Widget> questions;
+  final List<T> questions;
 
   const ExerciseWidget({
     super.key,
@@ -32,7 +32,6 @@ class ExerciseWidget extends StatelessWidget {
           runSpacing: 16,
           alignment: .spaceEvenly,
           runAlignment: .spaceEvenly,
-
           children: questions,
         ),
       ],

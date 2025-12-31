@@ -1,4 +1,4 @@
-import 'package:a2ui/widgets/shared/ds_number_input.dart';
+import 'package:a2ui/ds/ds_number_input.dart';
 import 'package:flutter/material.dart';
 import 'package:genui/genui.dart';
 import 'package:json_schema_builder/json_schema_builder.dart';

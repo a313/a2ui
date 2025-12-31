@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-class DsChatMessageWidget extends StatelessWidget {
-  const DsChatMessageWidget({
+class ChatMessageWidget extends StatelessWidget {
+  const ChatMessageWidget({
     super.key,
     required this.text,
     required this.icon,

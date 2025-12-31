@@ -1,9 +1,11 @@
+import 'package:a2ui/ds/ds_number_input_popup.dart';
+import 'package:a2ui/ds/ds_operation_popup.dart';
 import 'package:a2ui/utils/util.dart';
 import 'package:a2ui/widgets/maths/operation_widget.dart';
 import 'package:a2ui/widgets/shared/answer_box.dart';
 import 'package:flutter/material.dart';
 
-class CountingOperationWidget extends StatelessWidget {
+class CountingOperationWidget extends StatefulWidget {
   final int firstNumber;
   final String firstSymbol;
   final MathOperation operation;
@@ -11,15 +13,14 @@ class CountingOperationWidget extends StatelessWidget {
   final String secondSymbol;
 
   ///User answer
-  final int? userFirstAnswer;
-  final MathOperation? userOperationAnswer;
-  final int? userSecondAnswer;
-  final int? userFinalAnswer;
-  final void Function(Offset position)? onTapFirstAnswer;
-  final void Function(Offset position)? onTapOperationAnswer;
-  final void Function(Offset position)? onTapSecondAnswer;
-  final void Function(Offset position)? onTapFinalAnswer;
-  final bool showAnswer;
+  final int? userFirstNumber;
+  final MathOperation? userOperation;
+  final int? userSecondNumber;
+  final int? userResult;
+  final void Function(int? number)? onChangedFirstNumber;
+  final void Function(MathOperation? operation)? onChangedOperation;
+  final void Function(int? number)? onChangedSecondAnswer;
+  final void Function(int? number)? onChangedResultNumber;
 
   const CountingOperationWidget({
     super.key,
@@ -28,30 +29,40 @@ class CountingOperationWidget extends StatelessWidget {
     required this.operation,
     required this.secondNumber,
     required this.secondSymbol,
-    this.userFirstAnswer,
-    this.userOperationAnswer,
-    this.userSecondAnswer,
-    this.userFinalAnswer,
-    this.onTapFirstAnswer,
-    this.onTapOperationAnswer,
-    this.onTapSecondAnswer,
-    this.onTapFinalAnswer,
-    this.showAnswer = false,
+    this.userFirstNumber,
+    this.userOperation,
+    this.userSecondNumber,
+    this.userResult,
+    this.onChangedFirstNumber,
+    this.onChangedOperation,
+    this.onChangedSecondAnswer,
+    this.onChangedResultNumber,
   }) : assert(
          operation == MathOperation.add || operation == MathOperation.subtract,
          'CountingOperationWidget only supports addition (+) and subtraction (-) operations',
        );
 
+  @override
+  State<CountingOperationWidget> createState() =>
+      _CountingOperationWidgetState();
+}
+
+class _CountingOperationWidgetState extends State<CountingOperationWidget> {
+  int? userFirstAnswer;
+  MathOperation? userOperationAnswer;
+  int? userSecondAnswer;
+  int? userResultAnswer;
+
   int get result {
-    switch (operation) {
+    switch (widget.operation) {
       case MathOperation.add:
-        return firstNumber + secondNumber;
+        return widget.firstNumber + widget.secondNumber;
       case MathOperation.subtract:
-        return (firstNumber - secondNumber).abs();
+        return widget.firstNumber - widget.secondNumber;
       case MathOperation.multiply:
-        return firstNumber * secondNumber;
+        return widget.firstNumber * widget.secondNumber;
       case MathOperation.divide:
-        return firstNumber ~/ secondNumber;
+        return widget.firstNumber ~/ widget.secondNumber;
     }
   }
 
@@ -89,7 +100,7 @@ class CountingOperationWidget extends StatelessWidget {
                     border: Border.all(color: Colors.blue.shade200, width: 2),
                   ),
                   child: Text(
-                    firstSymbol * firstNumber,
+                    widget.firstSymbol * widget.firstNumber,
                     textAlign: TextAlign.center,
                     style: const TextStyle(fontSize: 40),
                   ),
@@ -101,23 +112,23 @@ class CountingOperationWidget extends StatelessWidget {
                 child: Container(
                   padding: const EdgeInsets.all(8),
                   decoration: BoxDecoration(
-                    color: operation == MathOperation.subtract
+                    color: widget.operation == MathOperation.subtract
                         ? Colors.red.shade50
                         : Colors.green.shade50,
                     borderRadius: BorderRadius.circular(16),
                     border: Border.all(
-                      color: operation == MathOperation.subtract
+                      color: widget.operation == MathOperation.subtract
                           ? Colors.red.shade200
                           : Colors.green.shade200,
                       width: 2,
                     ),
                   ),
                   child: Text(
-                    secondSymbol * secondNumber,
+                    widget.secondSymbol * widget.secondNumber,
                     textAlign: TextAlign.center,
                     style: TextStyle(
                       fontSize: 40,
-                      decoration: operation == MathOperation.subtract
+                      decoration: widget.operation == MathOperation.subtract
                           ? TextDecoration.lineThrough
                           : null,
                       decorationThickness: 2,
@@ -138,23 +149,51 @@ class CountingOperationWidget extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             AnswerBox(
-              onTap: onTapFirstAnswer,
-              correctAnswer: firstNumber.toString(),
-              showAnswer: showAnswer,
+              onTap: (position) {
+                context.showNumberInputPopup(
+                  position: position,
+                  onConfirm: (value) {
+                    setState(() {
+                      userFirstAnswer = value;
+                    });
+                    widget.onChangedFirstNumber?.call(value);
+                  },
+                );
+              },
+              correctAnswer: widget.firstNumber.toString(),
               userAnswer: userFirstAnswer?.toString(),
             ),
             const SizedBox(width: 12),
             AnswerBox(
-              onTap: onTapOperationAnswer,
-              correctAnswer: operation.symbol,
-              showAnswer: showAnswer,
+              onTap: (position) {
+                context.showOperationPopup(
+                  position: position,
+                  onSelect: (operation) {
+                    setState(() {
+                      userOperationAnswer = operation;
+                    });
+                    widget.onChangedOperation?.call(operation);
+                  },
+                );
+              },
+              correctAnswer: widget.operation.symbol,
+
               userAnswer: userOperationAnswer?.symbol,
             ),
             const SizedBox(width: 12),
             AnswerBox(
-              onTap: onTapSecondAnswer,
-              correctAnswer: secondNumber.toString(),
-              showAnswer: showAnswer,
+              onTap: (position) {
+                context.showNumberInputPopup(
+                  position: position,
+                  onConfirm: (value) {
+                    setState(() {
+                      userSecondAnswer = value;
+                    });
+                    widget.onChangedSecondAnswer?.call(value);
+                  },
+                );
+              },
+              correctAnswer: widget.secondNumber.toString(),
               userAnswer: userSecondAnswer?.toString(),
             ),
             const SizedBox(width: 12),
@@ -168,10 +207,19 @@ class CountingOperationWidget extends StatelessWidget {
             ),
             const SizedBox(width: 12),
             AnswerBox(
-              onTap: onTapFinalAnswer,
+              onTap: (position) {
+                context.showNumberInputPopup(
+                  position: position,
+                  onConfirm: (value) {
+                    setState(() {
+                      userResultAnswer = value;
+                    });
+                    widget.onChangedResultNumber?.call(value);
+                  },
+                );
+              },
               correctAnswer: result.toString(),
-              showAnswer: showAnswer,
-              userAnswer: userFinalAnswer?.toString(),
+              userAnswer: userResultAnswer?.toString(),
             ),
           ],
         ),
