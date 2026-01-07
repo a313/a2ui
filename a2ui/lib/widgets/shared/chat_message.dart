@@ -40,6 +40,7 @@ class ChatMessageWidget extends StatelessWidget {
                 padding: const EdgeInsets.all(12.0),
                 child: Row(
                   mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     if (isStart) ...[Icon(icon), const SizedBox(width: 8.0)],
                     Flexible(child: Text(text)),

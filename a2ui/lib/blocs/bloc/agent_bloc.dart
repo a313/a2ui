@@ -1,8 +1,8 @@
-import 'package:a2ui/genui/comparison_schema.dart';
-import 'package:a2ui/genui/counting_operation_schema.dart';
+import 'package:a2ui/genui/exercise_comparison_schema.dart';
+import 'package:a2ui/genui/exercise_counting_operation_schema.dart';
+import 'package:a2ui/genui/exercise_operation_schema.dart';
 import 'package:a2ui/genui/exercise_type.dart';
 import 'package:a2ui/genui/math_type.dart';
-import 'package:a2ui/genui/operation_schema.dart';
 import 'package:a2ui/prompts/system_vi.dart';
 import 'package:bloc/bloc.dart';
 import 'package:firebase_ai/firebase_ai.dart';
@@ -29,19 +29,19 @@ class AgentBloc extends Bloc<AgentEvent, AgentState> {
   }
 
   void _initializeConversation() {
-    final catalog = CoreCatalogItems.asCatalog().copyWith([
+    final catalog = Catalog([
       exerciseTypeSelector,
       mathTypeSelector,
       exerciseComparisonWidgetCatalogItem,
-      exerciseCountingOperationWidgetCatalogItem,
       exerciseOperationWidgetCatalogItem,
-    ]);
+      exerciseCountingOperationWidgetCatalogItem,
+    ], catalogId: 'custom_catalog');
     final generator = FirebaseAiContentGenerator(
       modelCreator:
           ({required configuration, systemInstruction, toolConfig, tools}) =>
               GeminiGenerativeModel(
                 FirebaseAI.googleAI().generativeModel(
-                  model: 'gemini-2.5-pro',
+                  model: 'gemini-2.5-flash',
                   systemInstruction: systemInstruction,
                   tools: tools,
                   toolConfig: toolConfig,

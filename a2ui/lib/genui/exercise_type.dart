@@ -1,4 +1,3 @@
-import 'dart:convert';
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
@@ -103,7 +102,6 @@ final exerciseTypeSelector = CatalogItem(
       },
     );
   },
-  exampleData: [_exampleData],
 );
 
 extension type _ExerciseTypeSelectorData.fromMap(Map<String, Object?> _json) {
@@ -344,34 +342,3 @@ class _ExerciseTypeItem extends StatelessWidget {
     );
   }
 }
-
-String _exampleData() => jsonEncode([
-  {
-    'id': 'root',
-    'component': {
-      'Column': {
-        'children': {
-          'explicitList': ['title_text', 'exercise_selector'],
-        },
-      },
-    },
-  },
-  {
-    'id': 'title_text',
-    'component': {
-      'Text': {
-        'text': {'literalString': 'Chọn loại bài tập bạn muốn tạo cho bé!'},
-      },
-    },
-  },
-  {
-    'id': 'exercise_selector',
-    'component': {
-      'ExerciseTypeSelector': {
-        'title': {'literalString': 'Loại bài tập'},
-        'confirmButtonLabel': {'literalString': 'Tiếp tục'},
-        'confirmAction': {'name': 'selectExerciseTypes'},
-      },
-    },
-  },
-]);

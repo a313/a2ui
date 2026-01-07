@@ -1,13 +1,18 @@
+import 'package:a2ui/ds/ds_button.dart';
 import 'package:flutter/material.dart';
 
 class ExerciseWidget<T extends Widget> extends StatelessWidget {
   final String title;
   final List<T> questions;
+  final String? finishButtonLabel;
+  final VoidCallback? onFinish;
 
   const ExerciseWidget({
     super.key,
     required this.title,
     required this.questions,
+    this.finishButtonLabel,
+    required this.onFinish,
   });
 
   @override
@@ -33,6 +38,11 @@ class ExerciseWidget<T extends Widget> extends StatelessWidget {
           alignment: .spaceEvenly,
           runAlignment: .spaceEvenly,
           children: questions,
+        ),
+        const SizedBox(height: 16, width: double.infinity),
+        DsButton.primary(
+          title: finishButtonLabel ?? 'Hoàn tất',
+          onPressed: onFinish,
         ),
       ],
     );
