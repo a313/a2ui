@@ -1,3 +1,4 @@
+import 'package:a2ui/genui/data_context_helper.dart';
 import 'package:a2ui/widgets/maths/operation_widget.dart';
 import 'package:a2ui/widgets/shared/exercise_widget.dart';
 import 'package:flutter/material.dart';
@@ -109,7 +110,7 @@ final exerciseOperationWidgetCatalogItem = CatalogItem(
               final pathStr = userAnswerRef?['path'] as String?;
               if (pathStr != null) {
                 final path = DataPath(pathStr);
-                context.dataContext.update(path, value);
+                safeUpdateDataContext(context.dataContext, path, value);
               }
             },
           ),

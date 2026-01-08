@@ -1,3 +1,4 @@
+import 'package:a2ui/genui/data_context_helper.dart';
 import 'package:a2ui/widgets/maths/counting_operation_widget.dart';
 import 'package:a2ui/widgets/maths/operation_widget.dart';
 import 'package:a2ui/widgets/shared/exercise_widget.dart';
@@ -160,28 +161,28 @@ final exerciseCountingOperationWidgetCatalogItem = CatalogItem(
               final pathStr = userFirstNumberRef?['path'] as String?;
               if (pathStr != null) {
                 final path = DataPath(pathStr);
-                context.dataContext.update(path, value);
+                safeUpdateDataContext(context.dataContext, path, value);
               }
             },
             onChangedOperation: (value) {
               final pathStr = userOperationRef?['path'] as String?;
               if (pathStr != null) {
                 final path = DataPath(pathStr);
-                context.dataContext.update(path, value?.symbol);
+                safeUpdateDataContext(context.dataContext, path, value?.symbol);
               }
             },
             onChangedSecondAnswer: (value) {
               final pathStr = userSecondNumberRef?['path'] as String?;
               if (pathStr != null) {
                 final path = DataPath(pathStr);
-                context.dataContext.update(path, value);
+                safeUpdateDataContext(context.dataContext, path, value);
               }
             },
             onChangedResultNumber: (value) {
               final pathStr = userResultRef?['path'] as String?;
               if (pathStr != null) {
                 final path = DataPath(pathStr);
-                context.dataContext.update(path, value);
+                safeUpdateDataContext(context.dataContext, path, value);
               }
             },
           ),
