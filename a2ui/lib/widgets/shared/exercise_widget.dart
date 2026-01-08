@@ -17,34 +17,37 @@ class ExerciseWidget<T extends Widget> extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        // Title
-        Text(
-          title,
-          style: const TextStyle(
-            fontSize: 18,
-            fontWeight: FontWeight.bold,
-            color: Colors.black87,
+    return Padding(
+      padding: EdgeInsetsGeometry.symmetric(horizontal: 8, vertical: 12),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          // Title
+          Text(
+            title,
+            style: const TextStyle(
+              fontSize: 18,
+              fontWeight: FontWeight.bold,
+              color: Colors.black87,
+            ),
           ),
-        ),
-        const SizedBox(height: 16, width: double.infinity),
-        // Questions
-        Wrap(
-          spacing: 32,
-          runSpacing: 16,
-          alignment: .spaceEvenly,
-          runAlignment: .spaceEvenly,
-          children: questions,
-        ),
-        const SizedBox(height: 16, width: double.infinity),
-        DsButton.primary(
-          title: finishButtonLabel ?? 'Hoàn tất',
-          onPressed: onFinish,
-        ),
-      ],
+          const SizedBox(height: 16, width: double.infinity),
+          // Questions
+          Wrap(
+            spacing: 32,
+            runSpacing: 16,
+            alignment: .spaceEvenly,
+            runAlignment: .spaceEvenly,
+            children: questions,
+          ),
+          const SizedBox(height: 16, width: double.infinity),
+          DsButton.primary(
+            title: finishButtonLabel ?? 'Hoàn tất',
+            onPressed: onFinish,
+          ),
+        ],
+      ),
     );
   }
 }

@@ -23,7 +23,10 @@ MathOperation? _parseMathOperation(String? value) {
 final _schema = S.object(
   title: 'ExerciseCountingOperationWidget',
   description:
-      'A widget for counting and math operations. Shows visual symbols (emojis) in groups that students count, then asks them to fill in the complete math equation: [count1] [+/-] [count2] = [result]. The first group shows symbols normally, the second group shows them crossed out (for subtraction) or normally (for addition). Only supports addition (+) and subtraction (-) operations.',
+      'A widget for counting and math operations. '
+      'Shows visual symbols (emojis) in groups that students count, then asks them to fill in the complete math equation: [count1] [+/-] [count2] = [result]. '
+      'The first group shows symbols normally, the second group shows them crossed out (for subtraction) or normally (for addition). '
+      'Only supports addition (+) and subtraction (-) operations.',
   properties: {
     'title': S.string(description: 'The title of the exercise', minLength: 1),
     'finishButtonLabel': S.string(
@@ -35,7 +38,12 @@ final _schema = S.object(
     ),
     'questions': S.list(
       description:
-          'Array of counting operation questions. Each question displays two groups of symbols/emojis for students to count and then complete the math equation.',
+          'Array of counting operation questions. Each question displays two groups of symbols/emojis for students to count and then complete the math equation.'
+          'The question is correct when all of the validation is correct '
+          '- userFirstNumber equal firstNumber'
+          '- userSecondNumber equal secondNumber'
+          '- userOperation equal operation'
+          '- userResult equal with the result of (firstNumber operation secondNumber)',
       items: S.object(
         properties: {
           'firstNumber': S.integer(
@@ -70,6 +78,7 @@ final _schema = S.object(
           ),
           'userOperation': A2uiSchemas.stringReference(
             description: r"The user\'s answer for the operation (+/-)",
+            enumValues: ["+", "-"],
           ),
           'userSecondNumber': A2uiSchemas.numberReference(
             description: r"The user\'s answer for counting the second group",

@@ -9,13 +9,10 @@ ComparisonOperator? _parseComparisonOperator(String? value) {
   if (value == null) return null;
   switch (value.toLowerCase()) {
     case '>':
-    case 'greaterthan':
       return ComparisonOperator.greaterThan;
     case '<':
-    case 'lessthan':
       return ComparisonOperator.lessThan;
     case '=':
-    case 'equal':
       return ComparisonOperator.equal;
     default:
       return null;
@@ -25,7 +22,8 @@ ComparisonOperator? _parseComparisonOperator(String? value) {
 final _schema = S.object(
   title: 'ExerciseComparisonWidget',
   description:
-      'A widget for displaying a set of comparison questions with a title. Each question compares two numbers with operators (<, >, =)',
+      'A widget for displaying a set of comparison questions with a title. '
+      'Each question compares two numbers with operators (<, >, =)',
   properties: {
     'title': S.string(description: 'The title of the exercise', minLength: 1),
     'finishButtonLabel': S.string(
@@ -36,7 +34,9 @@ final _schema = S.object(
       description: 'The action to perform when the finish button is tapped.',
     ),
     'questions': S.list(
-      description: 'Array of comparison questions',
+      description:
+          'Array of comparison questions'
+          'The user answer is correct if the comparison between firstNumber and secondNumber is correct',
       items: S.object(
         properties: {
           'firstNumber': S.integer(description: 'The first number to compare'),
@@ -44,7 +44,8 @@ final _schema = S.object(
             description: 'The second number to compare',
           ),
           'userAnswer': A2uiSchemas.stringReference(
-            description: 'The user answer (<, >, =)',
+            description: 'The user answer for each question',
+            enumValues: ['<', '>', '='],
           ),
         },
         required: ['firstNumber', 'secondNumber', 'userAnswer'],

@@ -31,7 +31,8 @@ MathOperation? _parseMathOperation(String? value) {
 final _schema = S.object(
   title: 'ExerciseOperationWidget',
   description:
-      'A widget for displaying a set of math operation questions with a title. Each question has two numbers and an operation (+, -, ×, ÷) where the user needs to find the result.',
+      'A widget for displaying a set of math operation questions with a title. '
+      'Each question has two numbers and an operation (+, -, ×, ÷) where the user needs to find the result.',
   properties: {
     'title': S.string(description: 'The title of the exercise', minLength: 1),
     'finishButtonLabel': S.string(
@@ -42,7 +43,9 @@ final _schema = S.object(
       description: 'The action to perform when the finish button is tapped.',
     ),
     'questions': S.list(
-      description: 'Array of operation questions',
+      description:
+          'Array of operation questions'
+          'The question is correct when the userAnswer is equal with the value of (firstNumber operation secondNumber)',
       items: S.object(
         properties: {
           'firstNumber': S.integer(

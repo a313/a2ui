@@ -24,9 +24,9 @@ enum MathType {
     description: 'Cộng trừ đơn giản',
     icon: Icons.calculate,
   ),
-  counting(
-    id: 'counting',
-    label: 'Phép toán',
+  completeMath(
+    id: 'completeMath',
+    label: 'Tạo phép toán',
     description: 'Từ hình ảnh tạo phép toán phù hợp',
     icon: Icons.format_list_numbered,
   );
@@ -58,7 +58,7 @@ final _mathTypeSchema = S.object(
           'The action to perform when the confirm button is tapped. '
           'The context for this action will include "selectedMathTypes" - '
           'an object mapping math type IDs to their exercise counts '
-          '(e.g., {"comparison": 5, "counting": 3}).',
+          '(e.g., {"comparison": 5, "completeMath": 3}).',
     ),
     'minExercises': S.integer(
       description: 'Minimum number of exercises per type (default: 1).',

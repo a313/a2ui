@@ -30,6 +30,12 @@ class AgentBloc extends Bloc<AgentEvent, AgentState> {
 
   void _initializeConversation() {
     final catalog = Catalog([
+      CoreCatalogItems.button,
+      CoreCatalogItems.column,
+      CoreCatalogItems.row,
+      CoreCatalogItems.text,
+      CoreCatalogItems.card,
+      CoreCatalogItems.icon,
       exerciseTypeSelector,
       mathTypeSelector,
       exerciseComparisonWidgetCatalogItem,

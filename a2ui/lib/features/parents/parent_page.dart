@@ -30,7 +30,6 @@ class _ParentPageState extends State<ParentPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text("Parent Page")),
       floatingActionButton: FloatingActionButton.small(
         child: Icon(Icons.telegram),
         onPressed: () {
@@ -42,7 +41,13 @@ class _ParentPageState extends State<ParentPage> {
         child: Column(
           children: [
             Expanded(
-              child: BlocBuilder<AgentBloc, AgentState>(
+              child: BlocConsumer<AgentBloc, AgentState>(
+                listener: (context, state) {
+                  _scrollToBottom();
+                },
+                listenWhen: (previous, current) {
+                  return previous.isLoading != current.isLoading;
+                },
                 builder: (context, state) {
                   return ListView.builder(
                     controller: _scrollController,
