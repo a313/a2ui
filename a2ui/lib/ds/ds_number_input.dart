@@ -10,7 +10,7 @@ class DsNumberInput extends StatefulWidget {
     this.min,
     this.max,
     required this.onChanged,
-    this.textFieldWidth = 60,
+    this.textFieldWidth = 44,
   });
 
   final int value;
@@ -104,8 +104,7 @@ class _DsNumberInputState extends State<DsNumberInput> {
           onPressed: canDecrement ? _decrement : null,
         ),
         const SizedBox(width: 4),
-        SizedBox(
-          width: widget.textFieldWidth,
+        Expanded(
           child: TextField(
             controller: _controller,
             textAlign: TextAlign.center,
@@ -128,6 +127,7 @@ class _DsNumberInputState extends State<DsNumberInput> {
             onSubmitted: _onTextSubmitted,
           ),
         ),
+
         const SizedBox(width: 4),
         DsIconButton(
           icon: Icons.add,

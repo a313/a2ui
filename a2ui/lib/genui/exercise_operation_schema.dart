@@ -38,7 +38,7 @@ final _schema = S.object(
     'title': S.string(description: 'The title of the exercise', minLength: 1),
     'finishButtonLabel': S.string(
       description:
-          'The label for the finish/submit button. Named "Bài tiếp theo" if this is not the last question, "Hoàn thành" if its the last question.',
+          'The label for the finish/submit button. Named "Next Exercise" if this is not the last question, "Finish" if its the last question.',
     ),
     'finishAction': A2uiSchemas.action(
       description: 'The action to perform when the finish button is tapped.',

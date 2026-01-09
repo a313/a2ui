@@ -10,24 +10,24 @@ import 'package:flutter/material.dart';
 import 'package:genui/genui.dart';
 import 'package:json_schema_builder/json_schema_builder.dart';
 
-/// Enum định nghĩa các dạng bài toán cho trẻ 4-6 tuổi
+/// Enum defining math exercise types for children aged 4-6
 enum MathType {
   comparison(
     id: 'comparison',
-    label: 'So sánh',
-    description: 'So sánh lớn hơn, nhỏ hơn, bằng nhau',
+    label: 'Comparison',
+    description: 'Compare greater than, less than, equal',
     icon: Icons.compare_arrows,
   ),
   operation(
     id: 'operation',
-    label: 'Phép tính',
-    description: 'Cộng trừ đơn giản',
+    label: 'Operation',
+    description: 'Simple addition and subtraction',
     icon: Icons.calculate,
   ),
   completeMath(
     id: 'completeMath',
-    label: 'Tạo phép toán',
-    description: 'Từ hình ảnh tạo phép toán phù hợp',
+    label: 'Create Operation',
+    description: 'Create operations from images',
     icon: Icons.format_list_numbered,
   );
 
@@ -51,7 +51,7 @@ final _mathTypeSchema = S.object(
     ),
     'confirmButtonLabel': A2uiSchemas.stringReference(
       description:
-          'The label for the confirm button. Defaults to "Tiếp tục" if not provided.',
+          'The label for the confirm button. Defaults to "Continue" if not provided.',
     ),
     'confirmAction': A2uiSchemas.action(
       description:
@@ -104,7 +104,7 @@ final mathTypeSelector = CatalogItem(
           builder: (context, confirmLabel, _) {
             return _MathTypeSelector(
               title: title,
-              confirmButtonLabel: confirmLabel ?? 'Tiếp tục',
+              confirmButtonLabel: confirmLabel ?? 'Continue',
               confirmAction: selectorData.confirmAction,
               minExercises: selectorData.minExercises ?? 1,
               maxExercises: selectorData.maxExercises ?? 20,
@@ -244,32 +244,64 @@ class _MathTypeSelectorState extends State<_MathTypeSelector> {
           ),
           const SizedBox(height: 16.0),
         ],
-        SizedBox(
-          height: 280,
-          child: ScrollConfiguration(
-            behavior: _DesktopAndWebScrollBehavior(),
-            child: ListView.separated(
-              padding: const EdgeInsets.symmetric(horizontal: 16.0),
-              scrollDirection: Axis.horizontal,
-              itemCount: MathType.values.length,
-              itemBuilder: (context, index) {
-                final type = MathType.values[index];
-                final isSelected = _selectedTypes.containsKey(type);
-                final exerciseCount = _selectedTypes[type];
-                return _MathTypeItem(
-                  type: type,
-                  isSelected: isSelected,
-                  exerciseCount: exerciseCount,
-                  minExercises: widget.minExercises,
-                  maxExercises: widget.maxExercises,
-                  onTap: () => _toggleSelection(type),
-                  onExerciseCountChanged: (count) =>
-                      _updateExerciseCount(type, count),
-                );
-              },
-              separatorBuilder: (context, index) => const SizedBox(width: 16),
-            ),
-          ),
+        LayoutBuilder(
+          builder: (context, constraints) {
+            // Use Wrap for mobile (width < 600), ListView for tablet/desktop
+            final isMobile = constraints.maxWidth < 600;
+
+            if (isMobile) {
+              return Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                child: Wrap(
+                  spacing: 12.0,
+                  runSpacing: 12.0,
+                  children: MathType.values.map((type) {
+                    final isSelected = _selectedTypes.containsKey(type);
+                    final exerciseCount = _selectedTypes[type];
+                    return _MathTypeItem(
+                      type: type,
+                      isSelected: isSelected,
+                      exerciseCount: exerciseCount,
+                      minExercises: widget.minExercises,
+                      maxExercises: widget.maxExercises,
+                      onTap: () => _toggleSelection(type),
+                      onExerciseCountChanged: (count) =>
+                          _updateExerciseCount(type, count),
+                    );
+                  }).toList(),
+                ),
+              );
+            }
+
+            return SizedBox(
+              height: 280,
+              child: ScrollConfiguration(
+                behavior: _DesktopAndWebScrollBehavior(),
+                child: ListView.separated(
+                  padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                  scrollDirection: Axis.horizontal,
+                  itemCount: MathType.values.length,
+                  itemBuilder: (context, index) {
+                    final type = MathType.values[index];
+                    final isSelected = _selectedTypes.containsKey(type);
+                    final exerciseCount = _selectedTypes[type];
+                    return _MathTypeItem(
+                      type: type,
+                      isSelected: isSelected,
+                      exerciseCount: exerciseCount,
+                      minExercises: widget.minExercises,
+                      maxExercises: widget.maxExercises,
+                      onTap: () => _toggleSelection(type),
+                      onExerciseCountChanged: (count) =>
+                          _updateExerciseCount(type, count),
+                    );
+                  },
+                  separatorBuilder: (context, index) =>
+                      const SizedBox(width: 16),
+                ),
+              ),
+            );
+          },
         ),
         const SizedBox(height: 24.0),
         Padding(
@@ -315,7 +347,7 @@ class _MathTypeItem extends StatelessWidget {
     final colorScheme = theme.colorScheme;
 
     return SizedBox(
-      width: 180,
+      width: 160,
       child: AnimatedContainer(
         duration: const Duration(milliseconds: 200),
         padding: const EdgeInsets.all(12),
@@ -402,17 +434,15 @@ class _MathTypeItem extends StatelessWidget {
                 ],
               ),
             ),
-            // Number input (only when selected)
-            if (isSelected) ...[
-              const SizedBox(height: 12),
-              NumberInput(
-                label: 'Số lượng',
-                value: exerciseCount ?? minExercises,
-                min: minExercises,
-                max: maxExercises,
-                onChanged: onExerciseCountChanged,
-              ),
-            ],
+
+            const SizedBox(height: 12),
+            NumberInput(
+              label: 'Quantity',
+              value: exerciseCount ?? minExercises,
+              min: minExercises,
+              max: maxExercises,
+              onChanged: onExerciseCountChanged,
+            ),
           ],
         ),
       ),
@@ -435,7 +465,7 @@ String _mathTypeExampleData() => jsonEncode([
     'id': 'title_text',
     'component': {
       'Text': {
-        'text': {'literalString': 'Chọn dạng bài toán và số lượng!'},
+        'text': {'literalString': 'Choose math type and quantity!'},
       },
     },
   },
@@ -443,8 +473,8 @@ String _mathTypeExampleData() => jsonEncode([
     'id': 'math_type_selector',
     'component': {
       'MathTypeSelector': {
-        'title': {'literalString': 'Dạng bài toán'},
-        'confirmButtonLabel': {'literalString': 'Tạo bài tập'},
+        'title': {'literalString': 'Math Exercise Types'},
+        'confirmButtonLabel': {'literalString': 'Create Exercises'},
         'confirmAction': {'name': 'selectMathTypes'},
         'minExercises': 1,
         'maxExercises': 20,

@@ -3,7 +3,7 @@ import 'package:a2ui/genui/exercise_counting_operation_schema.dart';
 import 'package:a2ui/genui/exercise_operation_schema.dart';
 import 'package:a2ui/genui/exercise_type.dart';
 import 'package:a2ui/genui/math_type.dart';
-import 'package:a2ui/prompts/system_vi.dart';
+import 'package:a2ui/prompts/system_en.dart';
 import 'package:bloc/bloc.dart';
 import 'package:firebase_ai/firebase_ai.dart';
 import 'package:genui/genui.dart';
@@ -47,14 +47,14 @@ class AgentBloc extends Bloc<AgentEvent, AgentState> {
           ({required configuration, systemInstruction, toolConfig, tools}) =>
               GeminiGenerativeModel(
                 FirebaseAI.googleAI().generativeModel(
-                  model: 'gemini-2.5-flash',
+                  model: 'gemini-2.5-pro',
                   systemInstruction: systemInstruction,
                   tools: tools,
                   toolConfig: toolConfig,
                 ),
               ),
       catalog: catalog,
-      systemInstruction: systemInstructionVI,
+      systemInstruction: systemInstructionEN,
     );
     conversation = GenUiConversation(
       contentGenerator: generator,

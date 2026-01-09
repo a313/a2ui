@@ -3,7 +3,6 @@ import 'package:a2ui/ds/ds_input.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:genui/genui.dart';
-import 'package:go_router/go_router.dart';
 
 class ParentPage extends StatefulWidget {
   const ParentPage({super.key});
@@ -30,13 +29,13 @@ class _ParentPageState extends State<ParentPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      floatingActionButton: FloatingActionButton.small(
-        child: Icon(Icons.telegram),
-        onPressed: () {
-          context.go('/test');
-        },
-      ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.endTop,
+      // floatingActionButton: FloatingActionButton.small(
+      //   child: Icon(Icons.telegram),
+      //   onPressed: () {
+      //     context.go('/test');
+      //   },
+      // ),
+      // floatingActionButtonLocation: FloatingActionButtonLocation.endTop,
       body: SafeArea(
         child: Column(
           children: [
@@ -50,8 +49,9 @@ class _ParentPageState extends State<ParentPage> {
                 },
                 builder: (context, state) {
                   return ListView.builder(
+                    keyboardDismissBehavior: .onDrag,
                     controller: _scrollController,
-                    padding: EdgeInsets.all(16),
+                    padding: EdgeInsets.all(12),
                     itemCount: state.messages.length,
                     itemBuilder: (context, index) {
                       final message = state.messages[index];

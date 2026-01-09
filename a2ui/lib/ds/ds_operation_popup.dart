@@ -26,7 +26,7 @@ class DsOperationPopup extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         children: [
           const Text(
-            'Chọn phép toán',
+            'Choose Operator',
             style: TextStyle(
               fontSize: 18,
               fontWeight: FontWeight.bold,
@@ -123,11 +123,11 @@ class _OperationButton extends StatelessWidget {
                   color: _getOperationColor(),
                 ),
               ),
-              const SizedBox(height: 4),
-              Text(
-                operation.label,
-                style: TextStyle(fontSize: 12, color: _getOperationColor()),
-              ),
+              // const SizedBox(height: 4),
+              // Text(
+              //   operation.label,
+              //   style: TextStyle(fontSize: 12, color: _getOperationColor()),
+              // ),
             ],
           ),
         ),

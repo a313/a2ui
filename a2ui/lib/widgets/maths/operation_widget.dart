@@ -5,10 +5,10 @@ import 'package:a2ui/widgets/shared/operation_symbol.dart';
 import 'package:flutter/material.dart';
 
 enum MathOperation {
-  add('+', 'Cộng'),
-  subtract('-', 'Trừ'),
-  multiply('×', 'Nhân'),
-  divide('÷', 'Chia');
+  add('+', 'Add'),
+  subtract('-', 'Subtract'),
+  multiply('×', 'Multiple'),
+  divide('÷', 'Divide');
 
   const MathOperation(this.symbol, this.label);
   final String symbol;

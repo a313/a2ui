@@ -53,7 +53,7 @@ final numberInput = CatalogItem(
           "id": "root",
           "component": {
             "NumberInput": {
-              "label": "Số lượng bài tập",
+              "label": "Number of exercises",
               "value": {
                 "path": "/exerciseCount"
               },
@@ -71,7 +71,7 @@ final numberInput = CatalogItem(
           "id": "root",
           "component": {
             "NumberInput": {
-              "label": "Số người",
+              "label": "Number of guests",
               "value": {
                 "path": "/guestCount"
               },

@@ -37,11 +37,11 @@ class ExerciseWidget<T extends Widget> extends StatelessWidget {
           Wrap(
             spacing: 32,
             runSpacing: 16,
-            alignment: .spaceEvenly,
+            alignment: .start,
             runAlignment: .spaceEvenly,
             children: questions,
           ),
-          const SizedBox(height: 16, width: double.infinity),
+          const Divider(height: 24),
           DsButton.primary(
             title: finishButtonLabel ?? 'Hoàn tất',
             onPressed: onFinish,

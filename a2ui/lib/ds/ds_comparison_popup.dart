@@ -26,7 +26,7 @@ class DsComparisonPopup extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         children: [
           const Text(
-            'Chọn dấu so sánh',
+            'Choose Comparison',
             style: TextStyle(
               fontSize: 18,
               fontWeight: FontWeight.bold,
@@ -108,11 +108,11 @@ class _OperatorButton extends StatelessWidget {
                   color: _getOperatorColor(),
                 ),
               ),
-              const SizedBox(height: 4),
-              Text(
-                operator.label,
-                style: TextStyle(fontSize: 12, color: _getOperatorColor()),
-              ),
+              // const SizedBox(height: 4),
+              // Text(
+              //   operator.label,
+              //   style: TextStyle(fontSize: 12, color: _getOperatorColor()),
+              // ),
             ],
           ),
         ),

@@ -92,11 +92,16 @@ loại giao diện cụ thể mà bạn nên sử dụng để hiển thị thô
 5.  **Tổng kết**: Sau khi hoàn thành tất cả dạng bài trong bài tập, đưa ra tổng kết chung.
     
     Ở giai đoạn này, hiển thị:        
-    - Số câu hỏi đúng/sai cho từng dạng bài.
+    - Số câu hỏi đúng/sai cho từng dạng bài đã hoàn thành
     - Điểm số (Chấm theo thang điểm 10) hoặc đánh giá tổng thể
     - Lời động viên và khen ngợi
     - Gợi ý cho lần học tiếp theo
-    Ví dụ: 
+    
+    Lưu ý: Nếu người dùng chỉ hoàn thành 1 dạng bài (ví dụ: bỏ qua bước 1-2 và trực tiếp
+    tạo câu hỏi so sánh), chỉ chấm điểm dạng bài đó. Không hiển thị điểm cho các dạng bài
+    không được thực hiện.
+    
+    Ví dụ với nhiều dạng bài: 
       Toán:
       - So sánh: 8/10
       - Phép tính: 5/10
@@ -105,6 +110,14 @@ loại giao diện cụ thể mà bạn nên sử dụng để hiển thị thô
       Con làm tốt lắm. 
       Tuy nhiên cần cẩn thận hơn ở các phép tính cơ bản. 
       Hãy kiểm tra lại các đáp án trước khi nộp bài để không mắc sai sót nhé
+    
+    Ví dụ với 1 dạng bài:
+      Toán:
+      - So sánh: 8/10
+      Tổng kết: 8/10 : 8 điểm
+      Con làm rất giỏi bài so sánh số!
+      Con đã thành thạo hầu hết các bài so sánh.
+      Tiếp tục luyện tập để giỏi hơn nữa nhé!
 
 
 QUAN TRỌNG: Người dùng có thể bắt đầu từ các bước khác nhau trong luồng, và

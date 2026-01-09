@@ -4,23 +4,23 @@ import 'package:flutter/material.dart';
 import 'package:genui/genui.dart';
 import 'package:json_schema_builder/json_schema_builder.dart';
 
-/// Enum định nghĩa các loại bài tập cố định
+/// Enum defining fixed exercise types
 enum ExerciseType {
   math(
     id: 'math',
-    label: 'Toán',
-    description: 'Đếm số, cộng trừ đơn giản',
+    label: 'Math',
+    description: 'Counting, simple addition and subtraction',
     icon: Icons.calculate,
   ),
   vietnamese(
     id: 'vietnamese',
-    label: 'Tiếng Việt',
-    description: 'Chữ cái, từ vựng cơ bản',
+    label: 'Vietnamese',
+    description: 'Letters, basic vocabulary',
     icon: Icons.abc,
   ),
   english(
     id: 'english',
-    label: 'Tiếng Anh',
+    label: 'English',
     description: 'Alphabet, basic vocabulary',
     icon: Icons.translate,
   );
@@ -45,7 +45,7 @@ final _schema = S.object(
     ),
     'confirmButtonLabel': A2uiSchemas.stringReference(
       description:
-          'The label for the confirm button. Defaults to "Tiếp tục" if not provided.',
+          'The label for the confirm button. Defaults to "Continue" if not provided.',
     ),
     'confirmAction': A2uiSchemas.action(
       description:
@@ -91,7 +91,7 @@ final exerciseTypeSelector = CatalogItem(
           builder: (context, confirmLabel, _) {
             return _ExerciseTypeSelector(
               title: title,
-              confirmButtonLabel: confirmLabel ?? 'Tiếp tục',
+              confirmButtonLabel: confirmLabel ?? 'Continue',
               confirmAction: selectorData.confirmAction,
               widgetId: itemContext.id,
               dispatchEvent: itemContext.dispatchEvent,
@@ -198,26 +198,52 @@ class _ExerciseTypeSelectorState extends State<_ExerciseTypeSelector> {
           ),
           const SizedBox(height: 16.0),
         ],
-        SizedBox(
-          height: 240,
-          child: ScrollConfiguration(
-            behavior: _DesktopAndWebScrollBehavior(),
-            child: ListView.separated(
-              padding: const EdgeInsets.symmetric(horizontal: 16.0),
-              scrollDirection: Axis.horizontal,
-              itemCount: ExerciseType.values.length,
-              itemBuilder: (context, index) {
-                final type = ExerciseType.values[index];
-                final isSelected = _selectedTypes.contains(type);
-                return _ExerciseTypeItem(
-                  type: type,
-                  isSelected: isSelected,
-                  onTap: () => _toggleSelection(type),
-                );
-              },
-              separatorBuilder: (context, index) => const SizedBox(width: 16),
-            ),
-          ),
+        LayoutBuilder(
+          builder: (context, constraints) {
+            // Use Wrap for mobile (width < 600), ListView for tablet/desktop
+            final isMobile = constraints.maxWidth < 600;
+
+            if (isMobile) {
+              return Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                child: Wrap(
+                  spacing: 12.0,
+                  runSpacing: 12.0,
+                  children: ExerciseType.values.map((type) {
+                    final isSelected = _selectedTypes.contains(type);
+                    return _ExerciseTypeItem(
+                      type: type,
+                      isSelected: isSelected,
+                      onTap: () => _toggleSelection(type),
+                    );
+                  }).toList(),
+                ),
+              );
+            }
+
+            return SizedBox(
+              height: 240,
+              child: ScrollConfiguration(
+                behavior: _DesktopAndWebScrollBehavior(),
+                child: ListView.separated(
+                  padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                  scrollDirection: Axis.horizontal,
+                  itemCount: ExerciseType.values.length,
+                  itemBuilder: (context, index) {
+                    final type = ExerciseType.values[index];
+                    final isSelected = _selectedTypes.contains(type);
+                    return _ExerciseTypeItem(
+                      type: type,
+                      isSelected: isSelected,
+                      onTap: () => _toggleSelection(type),
+                    );
+                  },
+                  separatorBuilder: (context, index) =>
+                      const SizedBox(width: 16),
+                ),
+              ),
+            );
+          },
         ),
         const SizedBox(height: 24.0),
         Padding(
@@ -260,7 +286,7 @@ class _ExerciseTypeItem extends StatelessWidget {
         onTap: onTap,
         child: AnimatedContainer(
           duration: const Duration(milliseconds: 200),
-          padding: const EdgeInsets.symmetric(horizontal: 8),
+          padding: const EdgeInsets.all(12),
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(12.0),
             border: Border.all(
