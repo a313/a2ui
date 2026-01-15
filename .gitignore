@@ -1,3 +1,5 @@
 a2ui/.vscode
 *.lock
-.fvmrc
+
+# FVM Version Cache
+.fvm/
