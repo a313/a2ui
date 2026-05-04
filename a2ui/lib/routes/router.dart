@@ -1,3 +1,4 @@
+import 'package:a2ui/features/math/math_config.dart';
 import 'package:a2ui/features/parents/parent_page.dart';
 import 'package:a2ui/features/test_widgets.dart';
 import 'package:flutter/material.dart';
@@ -5,7 +6,7 @@ import 'package:go_router/go_router.dart';
 
 /// Router configuration for the app
 final router = GoRouter(
-  initialLocation: '/parent',
+  initialLocation: '/math',
   routes: [
     GoRoute(
       path: '/test',
@@ -16,6 +17,11 @@ final router = GoRouter(
       path: '/parent',
       name: 'parent',
       builder: (context, state) => const ParentPage(),
+    ),
+    GoRoute(
+      path: '/math',
+      name: 'math',
+      builder: (context, state) => const MathConfigPage(),
     ),
     GoRoute(
       path: '/child',
